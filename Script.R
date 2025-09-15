@@ -69,3 +69,81 @@ head(resultsSorted, 20)
 
 =======
 >>>>>>> 55825e64ae8bebbce5d5a6e79f8e2449871f9ba3
+
+
+
+
+
+
+
+###randomise the gene names
+##select out the treatment ones. Only randomise these
+shuffle_samples <- c("SRS491582E2", "SRS491584E2", 
+                     "SRS491585E2", "SRS491586E2")
+
+##extract them
+subset_counts <- counts[, shuffle_samples]
+
+##randomise their gene names (idk why this code works but it does)
+set.seed(123)
+shuffled_subset <- subset_counts
+rownames(shuffled_subset) <- sample(rownames(subset_counts))
+##sanity check. make sure they are different.
+head(rownames(counts))          #original order
+head(rownames(shuffled_subset)) #after shuffling
+
+##now reinsert into the full matrix
+full_shuffled <- counts #for new matrix with og control data too
+full_shuffled[, shuffle_samples] <- shuffled_subset[rownames(full_shuffled), ]
+
+library(DESeq2)
+
+# colData from before (Treatment vs Control)
+samples <- colnames(full_shuffled)
+condition <- ifelse(grepl("E2$", samples), "Treatment", "Control")
+colData <- data.frame(row.names = samples,
+                      condition = condition)
+
+dds <- DESeqDataSetFromMatrix(countData = full_shuffled,
+                              colData   = colData,
+                              design    = ~ condition)
+
+dds <- DESeq(dds)
+res_shuffled <- results(dds)
+res_shuffled = na.omit(res_shuffled)
+resPadj_shuffled = res_shuffled[res_shuffled$padj <= 0.01 , ]
+head(resultsSorted, 20)
+dim(resPadj_shuffled)
+
+
+##set data for plot
+res_df <- as.data.frame(res)
+resShuffle_df <- as.data.frame(res_shuffled)
+
+##for significnace
+res_df$significant <- ifelse(res_df$padj < 0.05 & abs(res_df$log2FoldChange) > 1, "yes", "no")
+resShuffle_df$significant <- ifelse(resShuffle_df$padj < 0.05 & abs(resShuffle_df$log2FoldChange) > 1, "yes", "no")
+
+##volcano plot of normal run
+library("ggplot2")
+ggplot(res_df, aes(x = log2FoldChange, y = -log10(pvalue), color = significant)) +
+  geom_point(alpha = 0.5) +
+  scale_color_manual(values = c("no" = "grey", "yes" = "red")) +
+  theme_minimal() +
+  xlab("Log2 Fold Change") +
+  ylab("-Log10 p-value") +
+  ggtitle("Volcano Plot")
+
+##volcano plot of shuffled run (for paul)
+library("ggplot2")
+ggplot(resShuffle_df, aes(x = log2FoldChange, y = -log10(pvalue), color = significant)) +
+  geom_point(alpha = 0.5) +
+  scale_color_manual(values = c("no" = "grey", "yes" = "red")) +
+  theme_minimal() +
+  xlab("Log2 Fold Change") +
+  ylab("-Log10 p-value") +
+  ggtitle("Volcano Plot")
+
+
+
+
