@@ -61,8 +61,11 @@ head (resPadj)
 resultsSorted <- resPadj[order(abs(resPadj$log2FoldChange), decreasing = TRUE), ]
 head(resultsSorted, 20)
 
+<<<<<<< HEAD
 
 
 
 
 
+=======
+>>>>>>> 55825e64ae8bebbce5d5a6e79f8e2449871f9ba3
