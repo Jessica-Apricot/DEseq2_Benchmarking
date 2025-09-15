@@ -1,5 +1,5 @@
 
-
+######code from stats
 ##Load in the MCF7 data 
 ##load the library to bring extra pipe things (must say with a French accent apparently)
 library(magrittr)
@@ -60,3 +60,9 @@ head (resPadj)
 ##sort the results in order (such as top table) by fold change. 
 resultsSorted <- resPadj[order(abs(resPadj$log2FoldChange), decreasing = TRUE), ]
 head(resultsSorted, 20)
+
+
+
+
+
+
