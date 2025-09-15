@@ -146,7 +146,39 @@ ggplot(resShuffle_df, aes(x = log2FoldChange, y = -log10(pvalue), color = signif
 
 
 
-#Load Satb1 counts
-Satb1_Data = read.table("GSE281275_Satb1_RNA_filtered_counts.txt", sep="\t", header=TRUE)
+#install.packages("openxlsx")  
+library(openxlsx)
+library(DESeq2)
+
+
+SULT2_Data <- read.xlsx("GSE129746_counts.xlsx", sheet = 1)
+
+
+#Rename
+rownames(SULT2_Data) <- SULT2_Data[[1]]
+SULT2_Data <- SULT2_Data[, -1]
+SULT2_Data <- SULT2_Data[,1:8]
+
+##Specify the groupings
+conds2 = c("M","M","M", "M", "Mock","Mock","Mock", "Mock")
+
+##Create object of class CountDataSet derived from eSet class
+dds2 <- DESeqDataSetFromMatrix(
+  countData = as.matrix(SULT2_Data),
+  colData = data.frame(conds = factor(conds2)),
+  design = ~conds
+)
+
+##fit the model
+dds2 = DESeq(dds2)
+res2 = DESeq2::results(dds2)
+
+res2 = na.omit(res2)
+## Get the rows of "res" with significant adjusted p-values (default is FDR)
+res2Padj = res2[res2$padj <= 0.01 , ]
+
+results2Sorted <- res2Padj[order(abs(res2Padj$log2FoldChange), decreasing = TRUE), ]
+head(results2Sorted, 20)
+
 
 
