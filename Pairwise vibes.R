@@ -1,8 +1,11 @@
 #AUCOTT STUFF
 
-#HLD Brain HLD_Br_conds <- c("DMSO", "Low", "DMSO", "DMSO", "Low", "Low", "High", "High", "High", "High", "DMSO") 
 
-HLD_metadata <- data.frame(row.names = colnames(H_L_D_Brain), conds = factor(HLD_Br_conds)) HLD_Br_conds_dds <- DESeqDataSetFromMatrix(countData = as.matrix(H_L_D_Brain), colData = HLD_metadata, design = ~ conds) 
+
+#HLD Brain 
+mcf7_conds <- c("E", "E", "E", "E", "Control", "Control", "Control", "Control", "Random", "Random", "Random", "Random") 
+
+mcf7_metadata <- data.frame(row.names = colnames(H_L_D_Brain), conds = factor(HLD_Br_conds)) HLD_Br_conds_dds <- DESeqDataSetFromMatrix(countData = as.matrix(H_L_D_Brain), colData = HLD_metadata, design = ~ conds) 
 
 keep <- rowSums(cpm(counts(HLD_Br_conds_dds)) >= 1) >= 6 HLD_Br_conds_dds <- HLD_Br_conds_dds[keep,] 
 
