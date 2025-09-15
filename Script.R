@@ -146,4 +146,7 @@ ggplot(resShuffle_df, aes(x = log2FoldChange, y = -log10(pvalue), color = signif
 
 
 
+#Load Satb1 counts
+Satb1_Data = read.table("GSE281275_Satb1_RNA_filtered_counts.txt", sep="\t", header=TRUE)
+
 
