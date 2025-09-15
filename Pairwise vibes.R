@@ -1,6 +1,10 @@
 #AUCOTT STUFF
 
-
+mcf7_cols <- c("", "", "", "", 
+                    "", "", "", "", 
+                    "", "", "")
+mcf7_data <- Brain_counts[, HLD_Brain_cols]
+rownames(H_L_D_Brain) <- rownames(Brain_Counts)
 
 #HLD Brain 
 mcf7_conds <- c("E", "E", "E", "E", "Control", "Control", "Control", "Control", "Random", "Random", "Random", "Random") 
