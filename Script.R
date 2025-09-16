@@ -180,5 +180,47 @@ res2Padj = res2[res2$padj <= 0.01 , ]
 results2Sorted <- res2Padj[order(abs(res2Padj$log2FoldChange), decreasing = TRUE), ]
 head(results2Sorted, 20)
 
+###randomise the gene names
+##select out the treatment ones. Only randomise these
+mock_SULT2 <- c("Mock_LLC_1", "Mock_LLC_2", 
+                     "Mock_LLC_3", "Mock_LLC_4")
 
+##extract them
+subset_SULT2 <- SULT2_Data[, mock_SULT2]
+
+##randomise their gene names (idk why this code works but it does)
+set.seed(123)
+shuffled_SULT2 <- subset_SULT2
+rownames(shuffled_SULT2) <- sample(rownames(subset_SULT2))
+
+##sanity check. make sure they are different.
+head(rownames(SULT2_Data))          #original order
+head(rownames(shuffled_SULT2)) #after shuffling
+
+##now reinsert into the full matrix
+full_shuffled_SULT2 <- SULT2_Data #for new matrix with og control data too
+full_shuffled_SULT2 <- SULT2_Data
+full_shuffled_SULT2[rownames(shuffled_SULT2), mock_SULT2] <- shuffled_SULT2
+
+# colData from before (Treatment vs Control)
+SULT2_samples <- colnames(full_shuffled_SULT2)
+condition_SS <- ifelse(grepl("Mock", SULT2_samples), "Mock", "M")
+colData_SS <- data.frame(row.names = SULT2_samples,
+                      condition = condition_SS)
+table(colData_SS$condition)
+
+
+
+dds_SS <- DESeqDataSetFromMatrix(countData = full_shuffled_SULT2,
+                              colData   = colData_SS,
+                              design    = ~ condition)
+
+dds_SS <- DESeq(dds_SS)
+res_shuffled_SS <- results(dds_SS)
+res_shuffled_SS = na.omit(res_shuffled_SS)
+resPadj_shuffled_SS = res_shuffled_SS[res_shuffled_SS$padj <= 0.01 , ]
+
+##set data for plot
+res2_df <- as.data.frame(res2)
+res_shuffled_SS_df <- as.data.frame(res_shuffled_SS)
 
