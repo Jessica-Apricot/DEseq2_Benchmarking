@@ -102,7 +102,7 @@ ggplot(volc_res2_df, aes(x = logFC, y = negLogPval, color = category)) +
   geom_vline(xintercept = c(-fc_thres, fc_thres), linetype = "dashed") +
   geom_hline(yintercept = -log10(pval_thres), linetype = "dashed") +
   labs(
-    title = "Data set mcf7 Randomised Comparison",
+    title = "Data set SULT2 dataset Normal Comparison",
     subtitle = paste("Thresholds: |log2FC| >", fc_thres, "and adjusted p-value <", pval_thres),
     x = "log2 Fold Change",
     y = "-log10(p-value)",
@@ -137,7 +137,7 @@ ggplot(volc_res_shuffled_SS_df, aes(x = logFC, y = negLogPval, color = category)
   geom_vline(xintercept = c(-fc_thres, fc_thres), linetype = "dashed") +
   geom_hline(yintercept = -log10(pval_thres), linetype = "dashed") +
   labs(
-    title = "Data set mcf7 Randomised Comparison",
+    title = "Data set SULT2 Randomised Comparison",
     subtitle = paste("Thresholds: |log2FC| >", fc_thres, "and adjusted p-value <", pval_thres),
     x = "log2 Fold Change",
     y = "-log10(p-value)",

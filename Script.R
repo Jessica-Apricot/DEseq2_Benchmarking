@@ -213,7 +213,7 @@ table(colData_SS$condition)
 
 dds_SS <- DESeqDataSetFromMatrix(countData = full_shuffled_SULT2,
                               colData   = colData_SS,
-                              design    = ~ condition)
+                              design    = ~ condition_SS)
 
 dds_SS <- DESeq(dds_SS)
 res_shuffled_SS <- results(dds_SS)
@@ -223,4 +223,6 @@ resPadj_shuffled_SS = res_shuffled_SS[res_shuffled_SS$padj <= 0.01 , ]
 ##set data for plot
 res2_df <- as.data.frame(res2)
 res_shuffled_SS_df <- as.data.frame(res_shuffled_SS)
+
+
 
