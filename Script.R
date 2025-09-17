@@ -92,8 +92,12 @@ rownames(shuffled_subset) <- sample(rownames(subset_counts))
 head(rownames(counts))          #original order
 head(rownames(shuffled_subset)) #after shuffling
 
+##shuffle the control group
+count_shuffled = counts
+rownames(count_shuffled) = sample(rownames(counts))
+
 ##now reinsert into the full matrix
-full_shuffled <- counts #for new matrix with og control data too
+full_shuffled <- count_shuffled #for new matrix with og control data too
 full_shuffled[, shuffle_samples] <- shuffled_subset[rownames(full_shuffled), ]
 
 library(DESeq2)
@@ -202,6 +206,8 @@ full_shuffled_SULT2 <- SULT2_Data #for new matrix with og control data too
 full_shuffled_SULT2 <- SULT2_Data
 full_shuffled_SULT2[rownames(shuffled_SULT2), mock_SULT2] <- shuffled_SULT2
 
+
+
 # colData from before (Treatment vs Control)
 SULT2_samples <- colnames(full_shuffled_SULT2)
 condition_SS <- ifelse(grepl("Mock", SULT2_samples), "Mock", "M")
@@ -213,7 +219,7 @@ table(colData_SS$condition)
 
 dds_SS <- DESeqDataSetFromMatrix(countData = full_shuffled_SULT2,
                               colData   = colData_SS,
-                              design    = ~ condition_SS)
+                              design    = ~ condition)
 
 dds_SS <- DESeq(dds_SS)
 res_shuffled_SS <- results(dds_SS)
@@ -223,6 +229,7 @@ resPadj_shuffled_SS = res_shuffled_SS[res_shuffled_SS$padj <= 0.01 , ]
 ##set data for plot
 res2_df <- as.data.frame(res2)
 res_shuffled_SS_df <- as.data.frame(res_shuffled_SS)
+dim(res_shuffled_SS)
 
 
 
