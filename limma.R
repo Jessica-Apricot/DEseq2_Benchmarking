@@ -4,6 +4,8 @@ library(limma)
 library(edgeR)
 
 mcf7.design = model.matrix(~conds)
+head(mcf7.design)
+
 Lm_mcf7 = DGEList(counts=counts)
 Lm_mcf7 = calcNormFactors(Lm_mcf7)
 keep_mcf7 <- filterByExpr(Lm_mcf7, mcf7.design)

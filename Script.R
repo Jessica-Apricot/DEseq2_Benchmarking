@@ -123,6 +123,13 @@ dim(resPadj_shuffled)
 ##set data for plot
 res_df <- as.data.frame(res)
 resShuffle_df <- as.data.frame(res_shuffled)
+dim(res_shuffled)
+
+##shows the distribution of the adjusted p values. If it is very skewed then we have over-inflated significance.
+
+hist(resPadj_shuffled$padj) ##shuffled data
+
+hist(resPadj$padj) ##normal data
 
 ##for significnace
 res_df$significant <- ifelse(res_df$padj < 0.05 & abs(res_df$log2FoldChange) > 1, "yes", "no")
@@ -180,6 +187,7 @@ res2 = DESeq2::results(dds2)
 res2 = na.omit(res2)
 ## Get the rows of "res" with significant adjusted p-values (default is FDR)
 res2Padj = res2[res2$padj <= 0.01 , ]
+dim(res2Padj)
 
 results2Sorted <- res2Padj[order(abs(res2Padj$log2FoldChange), decreasing = TRUE), ]
 head(results2Sorted, 20)
